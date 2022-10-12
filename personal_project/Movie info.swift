@@ -1,3 +1,4 @@
+//
 //  Movie info.swift
 //  personal_project
 //
@@ -5,56 +6,42 @@
 //
 //control i auto formatting
 
-
 import Foundation
 
 struct Movie: Codable {
     var Title: String
+    var Genre: String
+    var Poster: String
+    
     static var movies: Movie? {
            Movie.fromJSON(titled: "movies")
        }
 
-static func fromJSON(titled Title: String) -> Movie? {
-        if let data = Data.fromJSONFile(forTitle: Title) {
+
+static func fromJSON(titled Genre: String) -> Movie? {
+        if let data = Data.fromJSONFile(forTitle: Genre) {
             print("we got data")
     
-//
 //    if let url = URL(string: "http://www.omdbapi.com/?i=tt3896198&apikey=f8344039") {
-      let decoder = JSONDecoder()
-//print("Url is valid")
+//        let decoder = JSONDecoder()
 //
-//        URLSession.shared.dataTask(with: url) { data, response, error in
-//
-//          if let data = data {
-//              do {
-//                  print("Response \(response)")
-//                  print("data \(data)")
-//
-//                 let movies = try decoder.decode(Movie.self, from: data)
-//                 print(movies.Title)
-//              } catch let error {
-//                 print(error)
-//                }
-//          }
-//       }
-
+            let decoder = JSONDecoder()
 
             do{
                 let movies = try decoder.decode(Movie.self, from: data)
-                print("heres the movie title: ", movies.Title)
+                print("heres the movie title: ", movies.Genre)
                 return movies
             } catch {
                 print("could not read", error.localizedDescription)
-                return nil
             }
         }
         return nil
     }
-    //return nil
-}
-
     
 
+    
+    
+//
 //        URLSession.shared.dataTask(with: url) { data, response, error in
 //          if let data = data {
 //              do {
@@ -65,8 +52,9 @@ static func fromJSON(titled Title: String) -> Movie? {
 //                }
 //          }
 //       }
-  //  }
+//    }
     
+}
 
     
 

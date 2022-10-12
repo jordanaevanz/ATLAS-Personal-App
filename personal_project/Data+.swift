@@ -8,9 +8,9 @@
 import Foundation
 
 extension Data {
-    static func fromJSONFile(forTitle Title: String) -> Data? {
+    static func fromJSONFile(forTitle Genre: String) -> Data? {
         do {
-            if let bundlePath = Bundle.main.path(forResource: Title, ofType: "json"),
+            if let bundlePath = Bundle.main.path(forResource: Genre, ofType: "json"),
                 let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
                 return jsonData
             }
