@@ -6,17 +6,24 @@
 //
 
 import SwiftUI
-
 struct ContentView: View {
     var body: some View {
             VStack{
+//                if let movies = Movie.movies {
+//                    Text("Hello, \(movies.Title)!")
+//                } else {
+//                    Text("No person found.")
+//                }
+//                
                 Text("Rating Movies").font(.system(size: 40.0))
                 ZStack{
                     RoundedRectangle(cornerRadius:20).fill()
                     HStack{
                         Image("kissingBooth").resizable().scaledToFit().padding(.vertical).padding(.horizontal)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                        Text("The Kissing Booth").font(.system(size: 20.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal)
+                        if let movies = Movie.movies{
+                            Text(movies.Title).font(.system(size: 20.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal)
+                            }
                         }
                 }
                 ZStack {
