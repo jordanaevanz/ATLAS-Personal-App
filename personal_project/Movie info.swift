@@ -60,10 +60,6 @@ static func fromJSON(titled Genre: String) -> Movie? {
 
     
     
-    
-    
-    
-    
 ////    static var movies: Movie? {
 ////        Movie.fromJSON(titled: "Guardians of the Galaxy Vol. 2")
 ////    }

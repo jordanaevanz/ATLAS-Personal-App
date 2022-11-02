@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 class API {
     
     enum APIError: Error {
@@ -21,12 +22,13 @@ class API {
         case Genre
         case Poster
         
-        var url: URL {
-            API.url.appending(component: self.rawValue)
-        }
+        //        var url: URL {
+        //            API.url.appending(component: self.rawValue)
+        //        }
     }
     
-    func createSearchURL(searchTerm: String, page: Int) -> URL? {
+    
+    static func searchURL(searchTerm: String, page: Int) -> URL? {
         let apiKey = "f8344039"
         let urlString = "http://www.omdbapi.com"
         //validates that this is a real url
@@ -34,52 +36,61 @@ class API {
             return nil
         }
         
-    let queryItems: [URLQueryItem] = [
-        URLQueryItem(name: "s", value: searchTerm),
-        URLQueryItem(name: "apiKey", value: apiKey),
-        URLQueryItem(name: "page", value: String(page))
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "s", value: searchTerm),
+            URLQueryItem(name: "apiKey", value: apiKey),
+            URLQueryItem(name: "page", value: String(page))
         ]
-
-        url.append(queryItems: queryItems)
+        // url.append(queryItems: queryItems)
         return url
     }
-        
-    createSearchURL(searchTerm: "hello", page: 1)
     
-        
+    // SearchURL(searchTerm: "hello", page: 1)
+    
+    
     //this is confusing
     static func fetchMovie(completion: @escaping (Result<[Movie], APIError>) -> Void) {
         //make request to web and error handle whether the request was successful or not
         //getting json back and then parse it into movie object
         
-        fetchJSON(path: .Title) { result in
+        
+        guard let url = searchURL(searchTerm: "", page: 1) else {
+            assertionFailure("couldn't create search URL")
+            return
+        }
+        
+        
+        fetchJSON(url: url) { result in
             switch result {
             case .success(let data):
                 do {
-                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]{
-                        let resultData = try? JSONSerialization.data(withJSONObject: json["results "]){
-                        let Title = try Movie.decodeJSONCollection(from: resultData)
-                        completion(.success(Title))
-                    }
-                }catch let error{
+                    // JSONSerialization
+                    let json = try JSONSerialization.jsonObject(with: data)
+                    //                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                    //                       let resultData = try? JSONSerialization.data(withJSONObject: json["results "]) {
+                    //                            let Title = try Movie.decodeJSONCollection(from: resultData)
+                    //                            completion(.success(Title))
+                    //                        }
+                } catch let error {
                     print("could not decode collection.", error)
                     completion(.failure(.decodingError))
                 }
                 print("success")
-                //handle HTTP failure
+                //                    //handle HTTP failure
             case .failure(let error):
                 print("error occurred when fetching movie.", error)
                 completion(.failure(.networkError(error)))
+                //                }
             }
         }
     }
     
     
-    static func fetchJSON(path: Path, completion: @escaping (Result<[Data], APIError>) -> Void) {
+    static func fetchJSON(url: URL, completion: @escaping (Result<[Data], APIError>) -> Void) {
         //make request to web and error handle whether the request was successful or not
         //getting json back and then parse it into movie object
         let session = URLSession.shared
-        let request = URLRequest(url: path.url)
+        let request = URLRequest(url: url)
         let task = session.dataTask(with: request) { data, response, error in
             //below is all error handling
             guard let data = data else {
@@ -93,12 +104,13 @@ class API {
                 return
             }
             //returning data with success call back
-            completion(.success(data))
+            completion(.success([data]))
         }
         //kicks off data task, without this nothing will happen
         task.resume()
     }
 }
+
 
 extension Decodable {
     static func decodeJSON(from data: Data) throws -> Self {
@@ -112,6 +124,6 @@ extension Decodable {
 
 
 
- 
+
 
 
