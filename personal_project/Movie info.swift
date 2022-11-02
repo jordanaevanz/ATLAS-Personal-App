@@ -10,7 +10,7 @@ import Foundation
 
 struct Movie: Codable {
     var Title: String
-    var Genre: String
+    var Genre: String?
     var Poster: String
     
     static var movies: Movie? {

@@ -27,7 +27,7 @@ struct ContentView: View {
                         }
                         //categories from json
                         if let movies = Movie.movies {
-                            let genreList = movies.Genre.split(separator: ",")
+                            let genreList = movies.Genre?.split(separator: ",") ?? []
                             Capsule().stroke(.white).frame(width: 70, height: 40).overlay(Text(genreList[0]).font(.system(size: 12.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal))
                             Capsule().stroke(.white).frame(width: 95, height: 40).overlay(Text(genreList[1]).font(.system(size: 12.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal))
                             Capsule().stroke(.white).frame(width: 85, height: 40).overlay(Text(genreList[2]).font(.system(size: 12.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal))
@@ -45,7 +45,7 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             }
         } .onAppear() {
-            API.fetchMovie { result in
+            API.fetchMovie(term: "princess") { result in
                 switch result {
                 case .success(let Title):
                     print("got Title:", Title)

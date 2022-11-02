@@ -30,7 +30,7 @@ class API {
     
     static func searchURL(searchTerm: String, page: Int) -> URL? {
         let apiKey = "f8344039"
-        let urlString = "http://www.omdbapi.com"
+        let urlString = "https://www.omdbapi.com"
         //validates that this is a real url
         guard var url = URL(string: urlString) else {
             return nil
@@ -41,7 +41,8 @@ class API {
             URLQueryItem(name: "apiKey", value: apiKey),
             URLQueryItem(name: "page", value: String(page))
         ]
-        // url.append(queryItems: queryItems)
+        
+        url.append(queryItems: queryItems)
         return url
     }
     
@@ -49,12 +50,12 @@ class API {
     
     
     //this is confusing
-    static func fetchMovie(completion: @escaping (Result<[Movie], APIError>) -> Void) {
+    static func fetchMovie(term: String, completion: @escaping (Result<[Movie], APIError>) -> Void) {
         //make request to web and error handle whether the request was successful or not
         //getting json back and then parse it into movie object
         
         
-        guard let url = searchURL(searchTerm: "", page: 1) else {
+        guard let url = searchURL(searchTerm: term, page: 1) else {
             assertionFailure("couldn't create search URL")
             return
         }
@@ -65,12 +66,15 @@ class API {
             case .success(let data):
                 do {
                     // JSONSerialization
-                    let json = try JSONSerialization.jsonObject(with: data)
-                    //                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                    //                       let resultData = try? JSONSerialization.data(withJSONObject: json["results "]) {
-                    //                            let Title = try Movie.decodeJSONCollection(from: resultData)
-                    //                            completion(.success(Title))
-                    //                        }
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let results = json["Search"] {
+                        
+                        let resultData = try JSONSerialization.data(withJSONObject: results)
+                        let Title = try Movie.decodeJSONCollection(from: resultData)
+                        completion(.success(Title))
+                    } else{
+                        print("no data in Search")
+                    }
                 } catch let error {
                     print("could not decode collection.", error)
                     completion(.failure(.decodingError))
@@ -86,7 +90,7 @@ class API {
     }
     
     
-    static func fetchJSON(url: URL, completion: @escaping (Result<[Data], APIError>) -> Void) {
+    static func fetchJSON(url: URL, completion: @escaping (Result<Data, APIError>) -> Void) {
         //make request to web and error handle whether the request was successful or not
         //getting json back and then parse it into movie object
         let session = URLSession.shared
@@ -104,7 +108,7 @@ class API {
                 return
             }
             //returning data with success call back
-            completion(.success([data]))
+            completion(.success(data))
         }
         //kicks off data task, without this nothing will happen
         task.resume()
