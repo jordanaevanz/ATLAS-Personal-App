@@ -8,13 +8,19 @@
 
 import Foundation
 
-struct Movie: Codable {
+struct Movie: Codable, Identifiable {
     var Title: String
     var Genre: String?
     var Poster: String
+    var Year: String
+    var imdbID: String
     
-    static var movies: Movie? {
-           Movie.fromJSON(titled: "movies")
+    var id: String {
+        imdbID
+    }
+    
+    static var movie: Movie {
+           Movie.fromJSON(titled: "movies")!
        }
 
 

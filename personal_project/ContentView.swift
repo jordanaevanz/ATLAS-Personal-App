@@ -7,57 +7,89 @@
 
 import SwiftUI
 struct ContentView: View {
-    var body: some View {
-        VStack{
-            Text("Search").font(.system(size: 25.0)).foregroundColor(.white)
-                ZStack{
-                   RoundedRectangle(cornerRadius:20).fill((Color("lightGrey")))
-                    HStack{
-                        //image from json
-                        if let movies = Movie.movies {
-                            AsyncImage(url: URL(string: movies.Poster)) { image in
-                                    image
-                                    .resizable().aspectRatio(contentMode: .fit)
-                                    .scaledToFit().padding(.vertical).padding(.horizontal)
-                                   .frame(width: 100, height: 100, alignment: .bottomLeading)
+    @State var searchInput: String = ""
+    //change movie to an array of movies
+    @State var movie = Movie.movie
+    @State var movies = [Movie]()
 
-                            } placeholder: {
-                                Color.red
-                            } .frame(maxWidth: 80, alignment: .bottomLeading)
-                        }
-                        //categories from json
-                        if let movies = Movie.movies {
-                            let genreList = movies.Genre?.split(separator: ",") ?? []
-                            Capsule().stroke(.white).frame(width: 70, height: 40).overlay(Text(genreList[0]).font(.system(size: 12.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal))
-                            Capsule().stroke(.white).frame(width: 95, height: 40).overlay(Text(genreList[1]).font(.system(size: 12.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal))
-                            Capsule().stroke(.white).frame(width: 85, height: 40).overlay(Text(genreList[2]).font(.system(size: 12.0)).foregroundColor(.white).padding(.vertical).padding(.horizontal))
-                        }
-                        
-                        
-                        
-                        
-                } .foregroundColor(Color("lightGrey"))
-            }
-            ZStack {
-                RoundedRectangle(cornerRadius:20).fill((Color("lightGrey")))
-               Text("Get Out").font(.system(size: 20.0)).foregroundColor(.white)
-                Image("getOut").resizable().scaledToFit().padding(.vertical).padding(.horizontal)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-            }
-        } .onAppear() {
-            API.fetchMovie(term: "princess") { result in
-                switch result {
-                case .success(let Title):
-                    print("got Title:", Title)
-                case .failure(let error):
-                    print("Fetching Title failed.", error)
-                }
-            }
+    
+    //change this to be a list of movies -> loop through movies and display each on a card
+    //list type in Swift UI that wraps the VStack
+    var body: some View {
+        TextField("Enter A Movie", text: $searchInput)
+            .searchable(text: $searchInput)
+        Button {
+            //  print("\(search)")
+              API.fetchMovie(term: "\(searchInput)") { result in
+                  switch result {
+                  case .success(let movies):
+//                      print("hi")
+//                      print("got Title:", movies)
+                      self.movies = movies
+                      
+  //                    print("got Year:", Year)
+  //                    Image(Poster).resizable().scaledToFit().padding(.vertical).padding(.horizontal)
+  //                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                  case .failure(let error):
+                      print("Fetching Title failed.", error)
+                  }
+              }
+        } label: {
+            Text("search")
         }
-        .padding(.horizontal)
-        .padding(.vertical)
+        List(movies) { movie in
+            movieView(movie: movie)
+        }
+//        .onAppear() {
+//          //  print("\(search)")
+//            API.fetchMovie(term: "\(searchInput)") { result in
+//                switch result {
+//                case .success(let movies):
+//                    print("hi")
+//                    print("got Title:", movies)
+//                    self.movies = movies
+//
+////                    print("got Year:", Year)
+////                    Image(Poster).resizable().scaledToFit().padding(.vertical).padding(.horizontal)
+////                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+//                case .failure(let error):
+//                    print("Fetching Title failed.", error)
+//                }
+//            }
+//        }
         //  .foregroundColor(Color("lightGrey"))
         //  .background(Rectangle().foregroundColor(Color("darkGrey")))
+    }
+    
+    func movieView(movie: Movie) -> some View {
+        VStack{
+            ZStack{
+                RoundedRectangle(cornerRadius:20).fill((Color("lightGrey")))
+                HStack{
+                    //image from json
+                    AsyncImage(url: URL(string: movie.Poster)) { image in
+                        image
+                            .resizable().aspectRatio(contentMode: .fit)
+                            .scaledToFit().padding(.vertical).padding(.horizontal)
+                            .frame(width: 150, height: 150, alignment: .bottomLeading)
+                    } placeholder: {
+                        Color.red
+                    } .frame(maxWidth: 80, alignment: .bottomLeading)
+                    //categories from json
+                    let genreList = movie.Genre?.split(separator: ",") ?? ["Adventure", "Comedy"]
+                    HStack {
+                        ForEach(genreList, id: \.self) { genre in
+                            Text(genre).font(.system(size: 12.0)).foregroundColor(.white)
+                                .background(Color.pink)
+                                .padding(12)
+                                .cornerRadius(12)
+                            //                           Capsule().stroke(.white).overlay(.padding(.vertical).padding(.horizontal))
+                        }
+                    }
+                    
+                } .foregroundColor(Color("lightGrey"))
+            }
+        }
     }
 }
     
@@ -69,14 +101,3 @@ struct ContentView_Previews: PreviewProvider {
 
     
 
-
-
-
-//}
-
-//                ZStack {
-//                    RoundedRectangle(cornerRadius:20).fill()
-//                   Text("Everything Everywhere All at Once").font(.system(size: 20.0)).foregroundColor(.white)
-//                    Image("everythingEverywhere").resizable().scaledToFit().padding(.vertical).padding(.horizontal)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-//                    }

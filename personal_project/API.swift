@@ -84,7 +84,7 @@ class API {
             case .failure(let error):
                 print("error occurred when fetching movie.", error)
                 completion(.failure(.networkError(error)))
-                //                }
+                // }
             }
         }
     }
