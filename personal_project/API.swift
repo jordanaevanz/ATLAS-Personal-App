@@ -21,7 +21,6 @@ class API {
         case Title
         case Genre
         case Poster
-        
         //        var url: URL {
         //            API.url.appending(component: self.rawValue)
         //        }

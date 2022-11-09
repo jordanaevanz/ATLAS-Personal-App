@@ -13,6 +13,7 @@ struct Movie: Codable, Identifiable {
     var Genre: String?
     var Poster: String
     var Year: String
+    //var imdbRating: String
     var imdbID: String
     
     var id: String {
@@ -20,22 +21,22 @@ struct Movie: Codable, Identifiable {
     }
     
     static var movie: Movie {
-           Movie.fromJSON(titled: "movies")!
-       }
-
-
-static func fromJSON(titled Genre: String) -> Movie? {
+        Movie.fromJSON(titled: "movies")!
+    }
+    
+    
+    static func fromJSON(titled Genre: String) -> Movie? {
         if let data = Data.fromJSONFile(forTitle: Genre) {
             print("we got data")
-    
-//    if let url = URL(string: "http://www.omdbapi.com/?i=tt3896198&apikey=f8344039") {
-//        let decoder = JSONDecoder()
-//
+            
+            //    if let url = URL(string: "http://www.omdbapi.com/?i=tt3896198&apikey=f8344039") {
+            //        let decoder = JSONDecoder()
+            //
             let decoder = JSONDecoder()
-
+            
             do{
                 let movies = try decoder.decode(Movie.self, from: data)
-                print("heres the movie title: ", movies.Genre)
+                print("heres the movie title: ", movies)
                 return movies
             } catch {
                 print("could not read", error.localizedDescription)
@@ -43,30 +44,6 @@ static func fromJSON(titled Genre: String) -> Movie? {
         }
         return nil
     }
-    
-
-    
-    
-//
-//        URLSession.shared.dataTask(with: url) { data, response, error in
-//          if let data = data {
-//              do {
-//                 let movies = try decoder.decode(Movie.self, from: data)
-//                 print(movies.Title)
-//              } catch let error {
-//                 print(error)
-//                }
-//          }
-//       }
-//    }
-    
 }
 
     
-
-    
-    
-////    static var movies: Movie? {
-////        Movie.fromJSON(titled: "Guardians of the Galaxy Vol. 2")
-////    }
-//}

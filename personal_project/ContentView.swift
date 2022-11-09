@@ -1,9 +1,7 @@
-//
 //  ContentView.swift
 //  personal_project
 //
 //  Created by Jordan Evans on 9/13/22.
-//
 
 import SwiftUI
 struct ContentView: View {
@@ -12,53 +10,37 @@ struct ContentView: View {
     @State var movie = Movie.movie
     @State var movies = [Movie]()
 
-    
     //change this to be a list of movies -> loop through movies and display each on a card
     //list type in Swift UI that wraps the VStack
     var body: some View {
-        TextField("Enter A Movie", text: $searchInput)
-            .searchable(text: $searchInput)
-        Button {
-            //  print("\(search)")
-              API.fetchMovie(term: "\(searchInput)") { result in
-                  switch result {
-                  case .success(let movies):
-//                      print("hi")
-//                      print("got Title:", movies)
-                      self.movies = movies
-                      
-  //                    print("got Year:", Year)
-  //                    Image(Poster).resizable().scaledToFit().padding(.vertical).padding(.horizontal)
-  //                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                  case .failure(let error):
-                      print("Fetching Title failed.", error)
-                  }
-              }
-        } label: {
-            Text("search")
-        }
+        
+        Text("Search").padding(20).font(.system(size: 28))
+        HStack{
+            Button {
+                //  print("\(search)")
+                API.fetchMovie(term: "\(searchInput)") { result in
+                    switch result {
+                    case .success(let movies):
+                        // print("hi")
+                        // print("got Title:", movies)
+                        self.movies = movies
+                        // print("got Year:", Year)
+                    case .failure(let error):
+                        print("Fetching Title failed.", error)
+                    }
+                }
+            } label: {
+                Image("searchIcon").resizable()
+                    .padding(15).frame(width: 45, height: 45)
+               // Text("search").padding(25)
+            }
+            TextField("Search For A Movie", text: $searchInput)
+                .searchable(text: $searchInput)
+          
+        }.background(Color("heatherGrey")).cornerRadius(30).padding([.trailing], 20).padding([.leading], 20)
         List(movies) { movie in
             movieView(movie: movie)
-        }
-//        .onAppear() {
-//          //  print("\(search)")
-//            API.fetchMovie(term: "\(searchInput)") { result in
-//                switch result {
-//                case .success(let movies):
-//                    print("hi")
-//                    print("got Title:", movies)
-//                    self.movies = movies
-//
-////                    print("got Year:", Year)
-////                    Image(Poster).resizable().scaledToFit().padding(.vertical).padding(.horizontal)
-////                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-//                case .failure(let error):
-//                    print("Fetching Title failed.", error)
-//                }
-//            }
-//        }
-        //  .foregroundColor(Color("lightGrey"))
-        //  .background(Rectangle().foregroundColor(Color("darkGrey")))
+        }.background(Color.black)
     }
     
     func movieView(movie: Movie) -> some View {
@@ -69,30 +51,32 @@ struct ContentView: View {
                     //image from json
                     AsyncImage(url: URL(string: movie.Poster)) { image in
                         image
-                            .resizable().aspectRatio(contentMode: .fit)
-                            .scaledToFit().padding(.vertical).padding(.horizontal)
-                            .frame(width: 150, height: 150, alignment: .bottomLeading)
+                            .resizable().aspectRatio(contentMode: .fit).cornerRadius(10)
+                            .scaledToFit().padding(10)
+                        //    .frame(width: 150, height: 150, alignment: .bottomLeading)
                     } placeholder: {
-                        Color.red
-                    } .frame(maxWidth: 80, alignment: .bottomLeading)
+                        Color.white
+                        Text(movie.Title).font(.system(size: 14.0))
+                    } .frame(width: 125, height: 150, alignment: .bottomLeading)
                     //categories from json
                     let genreList = movie.Genre?.split(separator: ",") ?? ["Adventure", "Comedy"]
                     HStack {
                         ForEach(genreList, id: \.self) { genre in
-                            Text(genre).font(.system(size: 12.0)).foregroundColor(.white)
+                            Text(genre).font(.system(size: 14.0)).foregroundColor(.white).padding(4)
                                 .background(Color.pink)
-                                .padding(12)
-                                .cornerRadius(12)
+                                .cornerRadius(10)
+                                .padding([.trailing], 15)
+                               
                             //                           Capsule().stroke(.white).overlay(.padding(.vertical).padding(.horizontal))
                         }
                     }
                     
-                } .foregroundColor(Color("lightGrey"))
+                } //.foregroundColor(Color("lightGrey"))
             }
         }
     }
 }
-    
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
