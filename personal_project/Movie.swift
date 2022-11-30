@@ -13,7 +13,7 @@ struct Movie: Codable, Identifiable {
     var Genre: String?
     var Poster: String
     var Year: String
-    //var imdbRating: String
+    var imdbRating: String?
     var imdbID: String
     
     var id: String {
