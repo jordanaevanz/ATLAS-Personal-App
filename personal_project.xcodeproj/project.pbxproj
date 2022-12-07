@@ -15,6 +15,7 @@
 		57878ED928D1338D00C5C8A4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57878ED828D1338D00C5C8A4 /* ContentView.swift */; };
 		57878EDB28D1338F00C5C8A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57878EDA28D1338F00C5C8A4 /* Assets.xcassets */; };
 		57878EDE28D1338F00C5C8A4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57878EDD28D1338F00C5C8A4 /* Preview Assets.xcassets */; };
+		57B88BF5293E9474007F1EED /* StarRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B88BF4293E9474007F1EED /* StarRatingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		57878ED828D1338D00C5C8A4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		57878EDA28D1338F00C5C8A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		57878EDD28D1338F00C5C8A4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		57B88BF4293E9474007F1EED /* StarRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRatingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				5768007228E4E41800D82EF3 /* Data+.swift */,
 				57878ED828D1338D00C5C8A4 /* ContentView.swift */,
 				573646CF291C4FBA0077FBCA /* fullMovieView.swift */,
+				57B88BF4293E9474007F1EED /* StarRatingView.swift */,
 				57878EDA28D1338F00C5C8A4 /* Assets.xcassets */,
 				57878EDC28D1338F00C5C8A4 /* Preview Content */,
 			);
@@ -149,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57B88BF5293E9474007F1EED /* StarRatingView.swift in Sources */,
 				57878ED928D1338D00C5C8A4 /* ContentView.swift in Sources */,
 				57878ED728D1338D00C5C8A4 /* personal_projectApp.swift in Sources */,
 				573646D0291C4FBA0077FBCA /* fullMovieView.swift in Sources */,

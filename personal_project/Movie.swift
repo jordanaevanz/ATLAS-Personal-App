@@ -12,17 +12,43 @@ struct Movie: Codable, Identifiable {
     var Title: String
     var Genre: String?
     var Poster: String
-    var Year: String
+    var Plot: String?
+    var Year: String?
+    var Runtime: String?
+    var Rated: String?
     var imdbRating: String?
     var imdbID: String
+    
+    
+    var starRating: Double? {
+        guard let imdbRating
+        else{
+            return nil
+        }
+        if let rating = Double(imdbRating){
+            return rating/2
+        }
+        return nil
+    }
+    
+    var runTime: Double? {
+        guard let Runtime
+        else{
+            return nil
+        }
+         if let runtime = Double(Runtime){
+             return runtime
+         }
+         return nil
+    }
     
     var id: String {
         imdbID
     }
     
-    static var movie: Movie {
-        Movie.fromJSON(titled: "movies")!
-    }
+//    static var movie: Movie {
+//        Movie.fromJSON(titled: "movies")!
+//    }
     
     
     static func fromJSON(titled Genre: String) -> Movie? {

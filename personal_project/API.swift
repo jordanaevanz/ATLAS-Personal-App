@@ -59,6 +59,7 @@ class API {
         ]
         
         url.append(queryItems: queryItems)
+        print(url)
         return url
     }
     
@@ -114,10 +115,10 @@ class API {
     
     
     
-    static func fetchFullMovie(term: String, completion: @escaping (Result<[Movie], APIError>) -> Void) {
+    static func fetchFullMovie(term: String, completion: @escaping (Result<Movie, APIError>) -> Void) {
         //make request to web and error handle whether the request was successful or not
         //getting json back and then parse it into movie object
-        
+      
         
         guard let url = fullSearchURL(searchTerm: term, plot: "full") else {
             assertionFailure("couldn't create search URL")
@@ -129,12 +130,12 @@ class API {
             case .success(let data):
                 do {
                     // JSONSerialization
-                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                       let results = json["Search"] {
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                         
-                        let resultData = try JSONSerialization.data(withJSONObject: results)
-                        let Title = try Movie.decodeJSONCollection(from: resultData)
+                        let resultData = try JSONSerialization.data(withJSONObject: json)
+                        let Title = try Movie.decodeJSON(from: resultData)
                         completion(.success(Title))
+                        print("full success")
                     } else{
                         print("no data in Search")
                     }
@@ -142,7 +143,7 @@ class API {
                     print("could not decode collection.", error)
                     completion(.failure(.decodingError))
                 }
-                print("success")
+
                 //                    //handle HTTP failure
             case .failure(let error):
                 print("error occurred when fetching movie.", error)
