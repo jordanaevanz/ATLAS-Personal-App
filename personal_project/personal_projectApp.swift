@@ -12,6 +12,9 @@ struct personal_projectApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .background() {
+                    Color("darkGrey")
+                }
         }
     }
 }

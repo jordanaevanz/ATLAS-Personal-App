@@ -21,10 +21,7 @@ class API {
         case Title
         case Genre
         case Poster
-        
-        //        var url: URL {
-        //            API.url.appending(component: self.rawValue)
-        //        }
+
     }
     
     
@@ -46,10 +43,33 @@ class API {
         return url
     }
     
-    // SearchURL(searchTerm: "hello", page: 1)
+    
+    static func fullSearchURL(searchTerm: String, plot: String) -> URL? {
+        let apiKey = "f8344039"
+        let urlString = "https://www.omdbapi.com"
+        //validates that this is a real url
+        guard var url = URL(string: urlString) else {
+            return nil
+        }
+        
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "i", value: searchTerm),
+            URLQueryItem(name: "apiKey", value: apiKey),
+            URLQueryItem(name: "plot", value: String(plot))
+        ]
+        
+        url.append(queryItems: queryItems)
+        print(url)
+        return url
+    }
+    
+    
+    
     
     
     //this is confusing
+    
+    //accepting a Result of [Movie] where success case will store an array of movies matching the search term
     static func fetchMovie(term: String, completion: @escaping (Result<[Movie], APIError>) -> Void) {
         //make request to web and error handle whether the request was successful or not
         //getting json back and then parse it into movie object
@@ -80,6 +100,50 @@ class API {
                     completion(.failure(.decodingError))
                 }
                 print("success")
+                //                    //handle HTTP failure
+            case .failure(let error):
+                print("error occurred when fetching movie.", error)
+                completion(.failure(.networkError(error)))
+                // }
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    static func fetchFullMovie(term: String, completion: @escaping (Result<Movie, APIError>) -> Void) {
+        //make request to web and error handle whether the request was successful or not
+        //getting json back and then parse it into movie object
+      
+        
+        guard let url = fullSearchURL(searchTerm: term, plot: "full") else {
+            assertionFailure("couldn't create search URL")
+            return
+        }
+        
+        fetchJSON(url: url) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    // JSONSerialization
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        
+                        let resultData = try JSONSerialization.data(withJSONObject: json)
+                        let Title = try Movie.decodeJSON(from: resultData)
+                        completion(.success(Title))
+                        print("full success")
+                    } else{
+                        print("no data in Search")
+                    }
+                } catch let error {
+                    print("could not decode collection.", error)
+                    completion(.failure(.decodingError))
+                }
+
                 //                    //handle HTTP failure
             case .failure(let error):
                 print("error occurred when fetching movie.", error)
